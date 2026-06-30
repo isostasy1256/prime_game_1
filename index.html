@@ -1,1 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Prime Connect</title>
+
+<style>
+body{
+    font-family:sans-serif;
+    text-align:center;
+    background:#222;
+    color:white;
+}
+
+#board{
+    display:grid;
+    grid-template-columns:repeat(5,60px);
+    gap:5px;
+    justify-content:center;
+    margin:20px;
+}
+
+.cell{
+    width:60px;
+    height:60px;
+    background:#444;
+    border-radius:8px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:28px;
+    cursor:pointer;
+    user-select:none;
+}
+
+.selected{
+    background:orange;
+}
+
+button{
+    padding:10px 20px;
+    margin:10px;
+    font-size:18px;
+}
+
+#number{
+    font-size:30px;
+    margin:20px;
+}
+
+#score{
+    font-size:25px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Prime Connect</h1>
+
+<div id="score">Score : 0</div>
+
+<div id="board"></div>
+
+<div id="number"></div>
+
+<button onclick="judge()">判定</button>
+<button onclick="resetSelect()">リセット</button>
+
+<script>
+
+const board=document.getElementById("board");
+const numberDiv=document.getElementById("number");
+const scoreDiv=document.getElementById("score");
+
+let score=0;
+let number="";
+let used=[];
+
+function makeBoard(){
+
+board.innerHTML="";
+
+for(let y=0;y<5;y++){
+
+for(let x=0;x<5;x++){
+
+let n=Math.floor(Math.random()*10);
+
+let cell=document.createElement("div");
+
+cell.className="cell";
+
+cell.innerText=n;
+
+cell.dataset.num=n;
+cell.dataset.x=x;
+cell.dataset.y=y;
+
+cell.onclick=function(){
+
+if(used.includes(cell))return;
+
+cell.classList.add("selected");
+
+used.push(cell);
+
+number+=n;
+
+numberDiv.innerText=number;
+
+}
+
+board.appendChild(cell);
+
+}
+
+}
+
+}
+
+function resetSelect(){
+
+used.forEach(c=>c.classList.remove("selected"));
+
+used=[];
+
+number="";
+
+numberDiv.innerText="";
+
+}
+
+function isPrime(num){
+
+if(num<2)return false;
+
+for(let i=2;i<=Math.sqrt(num);i++){
+
+if(num%i==0)return false;
+
+}
+
+return true;
+
+}
+
+function judge(){
+
+if(number.length==0)return;
+
+let value=BigInt(number);
+
+if(isPrime(Number(value))){
+
+let add=Number(value)*number.length;
+
+score+=add;
+
+scoreDiv.innerText="Score : "+score;
+
+alert("素数！ +"+add+"点");
+
+}else{
+
+alert("素数ではありません");
+
+}
+
+resetSelect();
+
+}
+
+makeBoard();
+
+</script>
+
+</body>
+</html>
 
